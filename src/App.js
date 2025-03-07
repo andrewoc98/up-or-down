@@ -1,7 +1,6 @@
 import {useState, useEffect} from "react";
 import { motion } from "framer-motion";
 import "./App.css"
-import music from "./sound.wav"
 import { Howl } from "howler";
 
 const rand = Math.floor(Math.random() * 100);
@@ -117,7 +116,6 @@ export default function SlotMachine() {
         <button
             onClick={() => {
                 setSpinning(true)
-                Audio()
             }}
             disabled={spinning}
             className="other"
@@ -155,19 +153,6 @@ export default function SlotMachine() {
     function selectPerson(){
         return Math.floor(Math.random() * 9)
     }
-
-
-
-var sound = new Howl({
-    src: [music]
-});
-async function Audio() {
-    for (let i = 0; i < 5; i++) {
-        setTimeout(() => {
-            sound.play();
-        }, i * 2700);
-    }
-}
 
 function Candle() {
     return (

@@ -1,7 +1,6 @@
-import {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import { motion } from "framer-motion";
 import "./App.css"
-import { Howl } from "howler";
 
 const rand = Math.floor(Math.random() * 100);
 const result = Math.random() < 0.5 ? "Good" : "Bad";
@@ -10,7 +9,7 @@ const weather = ["It's miserable out", "Great stretch in the evening", "Could be
 const BoolV2 = ["True","False","Perhaps"][Math.floor(Math.random() * 3)]
 const cosmic =["Nik was Stopped", "Andrew is the Murderer", "The Big Appsecsy Determined"][Math.floor(Math.random() * 3)]
 const symbols = ["⬆️", "⬇️", "NO STAND UP"];
-const people = ["Andrew", "Arun", "Liam", "Nik", "Rafal", "Sneha", "Prashant", "John", "Vishal"]
+const wheelieTeam = ["Andrew", "Arun", "Liam", "Nik", "Rafal", "Sneha", "Prashant", "John", "Vishal"];
 const steps = [
     "Consulting Oracle.....",
     `Determining Celestial Invocation...${result}`,
@@ -25,9 +24,11 @@ const steps = [
 
 export default function SlotMachine() {
   const [slots, setSlots] = useState(["⬆️", "⬇️", "NO STAND UP"]);
-  const [peopleSlots, setPeopleSlots] = useState([people[Math.floor(Math.random() * 9)],people[Math.floor(Math.random() * 9)],people[Math.floor(Math.random() * 9)]])
-  const [text, setText] = useState("")
+  const [peopleSlots, setPeopleSlots] = useState(["", "", ""]);
+  const [text, setText] = useState("");
   const [spinning, setSpinning] = useState(false);
+  const [sacrificialLambs, setSacrificialLambs] = useState("");
+  const [isWheelieTeam, setIsWheelieTeam] = useState(false);
 
     useEffect(() => {
         if (spinning) {
@@ -35,7 +36,8 @@ export default function SlotMachine() {
                 setSlots(Array.from({ length: 3 }, () => symbols[Math.floor(Math.random() * symbols.length)]));
             }, 100);
             const interval2 = setInterval(() => {
-                setPeopleSlots(Array.from({ length: 3 }, () => people[Math.floor(Math.random() * 9)]));
+                const lambs = sacrificialLambs.split(",").map(lamb => lamb.trim()).filter(lamb => lamb !== "");
+                setPeopleSlots(Array.from({ length: 3 }, () => lambs[Math.floor(Math.random() * lambs.length)] || ""));
             }, 105);
             let stepCounter = 0;
             const textInterval = setInterval(() => {
@@ -49,10 +51,9 @@ export default function SlotMachine() {
 
             setTimeout(() => {
                 setSlots(Array.from({ length: 3 }, () => symbols[generateDay()]));
-                const person = selectPerson()
-                setPeopleSlots(Array.from({ length: 3 }, () => people[person]))
-                console.log(peopleSlots)
-                console.log(person)
+                const lambs = sacrificialLambs.split(",").map(lamb => lamb.trim()).filter(lamb => lamb !== "");
+                const person = lambs[Math.floor(Math.random() * lambs.length)] || "";
+                setPeopleSlots(Array.from({ length: 3 }, () => person));
                 setSpinning(false);
                 clearInterval(interval1);
                 clearInterval(interval2);
@@ -70,7 +71,7 @@ export default function SlotMachine() {
   return (
 
       <div className="mainDiv">
-          <h1 className= "header">The Wheelie Oracle</h1>
+          <h1 className="header scary-font">The Wheelie Oracle</h1>
           <h2 className="header">Spin To Stand-Up</h2>
           <div className="candle-container">
               <Candle />
@@ -123,6 +124,32 @@ export default function SlotMachine() {
           {spinning ? "Spinning..." : "Spin"}
         </button>
           <p>{text}</p>
+          <div className="sacrificial-lambs">
+              <h3 className="scary-font">Team Members</h3>
+              <div className="checkbox-container">
+                  <label>
+                      <input
+                          type="checkbox"
+                          checked={isWheelieTeam}
+                          onChange={(e) => {
+                              setIsWheelieTeam(e.target.checked);
+                              if (e.target.checked) {
+                                  setSacrificialLambs(wheelieTeam.join(", "));
+                              } else {
+                                  setSacrificialLambs("");
+                              }
+                          }}
+                      />
+                      Wheelie Team
+                  </label>
+              </div>
+              <textarea
+                  value={sacrificialLambs}
+                  onChange={(e) => setSacrificialLambs(e.target.value)}
+                  rows={3}
+                  className="lambs-input"
+              />
+          </div>
       </div>
   );
 }
@@ -153,6 +180,7 @@ export default function SlotMachine() {
     function selectPerson(){
         return Math.floor(Math.random() * 9)
     }
+
 
 function Candle() {
     return (

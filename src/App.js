@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { motion } from "framer-motion";
 import "./App.css"
+import TagInput from "./TagInput";
 
 const rand = Math.floor(Math.random() * 100);
 const result = Math.random() < 0.5 ? "Good" : "Bad";
@@ -143,13 +144,11 @@ export default function SlotMachine() {
                       Wheelie Team
                   </label>
               </div>
-              <textarea
-                  value={sacrificialLambs}
-                  onChange={(e) => setSacrificialLambs(e.target.value)}
-                  rows={3}
-                  className="lambs-input"
-              />
-          </div>
+              </div>
+          <TagInput
+              isWheelieTeam={isWheelieTeam}
+              wheelieTeam={wheelieTeam}
+              onTagsChange={setSacrificialLambs} />
       </div>
   );
 }

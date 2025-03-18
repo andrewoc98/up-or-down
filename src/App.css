@@ -148,3 +148,93 @@ h3{
     align-content: center;
 }
 
+.tag-input-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+.tag-textarea {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap; /* Ensure tags wrap instead of overflowing */
+    border: 1px solid #ccc;
+    padding: 8px;
+    min-height: 60px;
+    border-radius: 5px;
+    background: white;
+    cursor: text;
+    width: 100%;
+    max-width: 400px; /* Prevent excessive width */
+    overflow: hidden;
+}
+
+.tag {
+    background: black;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    background: black;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    margin: 3px; /* Add spacing between tags */
+    max-width: calc(100% - 10px); /* Ensure tags don’t overflow */
+    white-space: nowrap;
+}
+
+.remove-tag {
+    background: none;
+    border: none;
+    color: white;
+    font-weight: bold;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.tag-input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 5px;
+    width: 100%;
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 5px;
+    min-width: 100px;
+    width: auto; /* Allow the input to shrink properly */
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjusts spacing between checkbox and TagInput */
+    width: 100%;
+    max-width: 400px; /* Ensures consistent width */
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    white-space: nowrap; /* Prevents label text from wrapping */
+    margin-right: auto; /* Ensures the checkbox is on the left */
+}
+
+.checkbox-container input[type="checkbox"] {
+    transform: translateY(1px); /* Adjust vertical alignment if needed */
+}
+
+.tag-input-container {
+    flex-grow: 1; /* Ensures TagInput takes remaining space */
+}
+
+.tag-textarea {
+/* Prevent overflow */
+}
+
+
+

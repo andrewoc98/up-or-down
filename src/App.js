@@ -30,6 +30,7 @@ export default function SlotMachine() {
   const [spinning, setSpinning] = useState(false);
   const [sacrificialLambs, setSacrificialLambs] = useState("");
   const [isWheelieTeam, setIsWheelieTeam] = useState(false);
+  const [spinDuration, setSpinDuration] = useState(4000);
 
     useEffect(() => {
         if (spinning) {
@@ -48,7 +49,7 @@ export default function SlotMachine() {
                 } else {
                     clearInterval(textInterval);
                 }
-            }, 1450); // Show each step for 500ms
+            }, (spinDuration/9)); // Show each step for 500ms
 
             setTimeout(() => {
                 setSlots(Array.from({ length: 3 }, () => symbols[generateDay()]));
@@ -59,7 +60,7 @@ export default function SlotMachine() {
                 clearInterval(interval1);
                 clearInterval(interval2);
                 clearInterval(textInterval);
-            }, 13400);
+            }, spinDuration);
 
             return () => {
                 clearInterval(interval1);
@@ -74,6 +75,14 @@ export default function SlotMachine() {
       <div className="mainDiv">
           <h1 className="header scary-font">The Wheelie Oracle</h1>
           <h2 className="header">Spin To Stand-Up</h2>
+          <label className="header">Spin Duration: {(spinDuration/1000).toFixed(1)}s</label>
+          <input className="slider"
+              type="range"
+              min="1000"
+              max="10000"
+              value={spinDuration}
+              onChange={(e) => setSpinDuration(Number(e.target.value))}
+          />
           <div className="candle-container">
               <Candle />
               <Candle />

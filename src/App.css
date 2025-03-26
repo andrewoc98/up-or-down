@@ -232,9 +232,6 @@ h3{
     flex-grow: 1; /* Ensures TagInput takes remaining space */
 }
 
-.tag-textarea {
-/* Prevent overflow */
-}
 
 
 

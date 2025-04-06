@@ -67,8 +67,6 @@ p{
 }
 
 .sacrificial-lambs {
-    margin-top: 2rem;
-    width: 80%;
     max-width: 600px;
     align-content: center;
 }
@@ -155,7 +153,7 @@ h3{
 
 .tag-textarea {
     display: flex;
-    gap: 5px;
+
     flex-wrap: wrap; /* Ensure tags wrap instead of overflowing */
     border: 1px solid #ccc;
     padding: 8px;
@@ -169,12 +167,6 @@ h3{
 }
 
 .tag {
-    background: black;
-    color: white;
-    padding: 5px 8px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
     background: black;
     color: white;
     padding: 5px 8px;
@@ -232,6 +224,32 @@ h3{
     flex-grow: 1; /* Ensures TagInput takes remaining space */
 }
 
-
-
-
+.tag {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+.tag-input, .weight-input {
+    padding: 0.3rem;
+    background: #333;
+    border: 1px solid #444;
+    color: white;
+    border-radius: 4px;
+}
+.remove-tag {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.add-entry {
+    margin-top: 0.5rem;
+    background: #444;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}

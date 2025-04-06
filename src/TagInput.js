@@ -1,48 +1,57 @@
 import { useState, useEffect } from "react";
 
 export default function TagInput({ isWheelieTeam, wheelieTeam, onTagsChange }) {
-    const [tags, setTags] = useState([]);
+    const [entries, setEntries] = useState([]);
 
-    // Sync with "Wheelie Team" checkbox state
     useEffect(() => {
         if (isWheelieTeam) {
-            setTags(wheelieTeam);
+            setEntries(wheelieTeam.map(name => ({ name, weight: 1 })));
         } else {
-            setTags([]);
+            setEntries([]);
         }
     }, [isWheelieTeam, wheelieTeam]);
 
     useEffect(() => {
-        onTagsChange(tags.join(", "));
-    }, [tags, onTagsChange]);
+        onTagsChange(entries);
+    }, [entries, onTagsChange]);
 
-    const addTag = (e) => {
-        if (e.key === "Enter" && e.target.value.trim()) {
-            setTags([...tags, e.target.value.trim()]);
-            e.target.value = "";
-        }
+    const addEntry = () => {
+        setEntries([...entries, { name: "", weight: 1 }]);
     };
 
-    const removeTag = (index) => {
-        setTags(tags.filter((_, i) => i !== index));
+    const updateEntry = (index, field, value) => {
+        const newEntries = [...entries];
+        newEntries[index][field] = field === "weight" ? parseInt(value) || 1 : value;
+        setEntries(newEntries);
+    };
+
+    const removeEntry = (index) => {
+        setEntries(entries.filter((_, i) => i !== index));
     };
 
     return (
         <div className="tag-input-container">
-            <div className="tag-textarea">
-                {tags.map((tag, index) => (
-                    <div key={index} className="tag">
-                        {tag}
-                        <button onClick={() => removeTag(index)} className="remove-tag">✖</button>
-                    </div>
-                ))}
-                <input
-                    type="text"
-                    placeholder="Type and press Enter..."
-                    onKeyDown={addTag}
-                    className="tag-input"
-                />
-            </div>
+            {entries.map((entry, index) => (
+                <div key={index} className="tag">
+                    <input
+                        type="text"
+                        placeholder="Name"
+                        value={entry.name}
+                        onChange={(e) => updateEntry(index, "name", e.target.value)}
+                        className="tag-input"
+                    />
+                    <input
+                        type="number"
+                        placeholder="Weight"
+                        value={entry.weight}
+                        onChange={(e) => updateEntry(index, "weight", e.target.value)}
+                        className="weight-input"
+                        min="1"
+                    />
+                    <button onClick={() => removeEntry(index)} className="remove-tag">✖</button>
+                </div>
+            ))}
+            <button onClick={addEntry} className="add-entry">Add</button>
         </div>
     );
 }

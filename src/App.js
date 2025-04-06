@@ -28,19 +28,25 @@ export default function SlotMachine() {
   const [peopleSlots, setPeopleSlots] = useState(["", "", ""]);
   const [text, setText] = useState("");
   const [spinning, setSpinning] = useState(false);
-  const [sacrificialLambs, setSacrificialLambs] = useState("");
+  const [lambs, setLambs] = useState([]);
   const [isWheelieTeam, setIsWheelieTeam] = useState(false);
   const [spinDuration, setSpinDuration] = useState(4000);
 
     useEffect(() => {
         if (spinning) {
             const interval1 = setInterval(() => {
-                setSlots(Array.from({ length: 3 }, () => symbols[Math.floor(Math.random() * symbols.length)]));
+                setSlots(
+                    Array.from({ length: 3 }, () => symbols[Math.floor(Math.random() * symbols.length)])
+                );
             }, 100);
+
             const interval2 = setInterval(() => {
-                const lambs = sacrificialLambs.split(",").map(lamb => lamb.trim()).filter(lamb => lamb !== "");
-                setPeopleSlots(Array.from({ length: 3 }, () => lambs[Math.floor(Math.random() * lambs.length)] || ""));
+                const validLambs = lambs.filter(l => l.name.trim() !== "");
+                setPeopleSlots(
+                    Array.from({ length: 3 }, () => weightedRandomPick(validLambs) || "")
+                );
             }, 105);
+
             let stepCounter = 0;
             const textInterval = setInterval(() => {
                 if (stepCounter < steps.length) {
@@ -49,13 +55,17 @@ export default function SlotMachine() {
                 } else {
                     clearInterval(textInterval);
                 }
-            }, (spinDuration/9)); // Show each step for 500ms
+            }, spinDuration / 9);
 
             setTimeout(() => {
-                setSlots(Array.from({ length: 3 }, () => symbols[generateDay()]));
-                const lambs = sacrificialLambs.split(",").map(lamb => lamb.trim()).filter(lamb => lamb !== "");
-                const person = lambs[Math.floor(Math.random() * lambs.length)] || "";
-                setPeopleSlots(Array.from({ length: 3 }, () => person));
+                setSlots(
+                    Array.from({ length: 3 }, () => symbols[generateDay()])
+                );
+                const validLambs = lambs.filter(l => l.name.trim() !== "");
+                const finalPerson = weightedRandomPick(validLambs);
+                setPeopleSlots(
+                    Array.from({ length: 3 }, () => finalPerson || "")
+                );
                 setSpinning(false);
                 clearInterval(interval1);
                 clearInterval(interval2);
@@ -68,9 +78,9 @@ export default function SlotMachine() {
                 clearInterval(textInterval);
             };
         }
-    }, [spinning]);
+    }, [spinning, lambs, spinDuration]);
 
-  return (
+    return (
 
       <div className="mainDiv">
           <h1 className="header scary-font">The Wheelie Oracle</h1>
@@ -142,11 +152,12 @@ export default function SlotMachine() {
                           type="checkbox"
                           checked={isWheelieTeam}
                           onChange={(e) => {
-                              setIsWheelieTeam(e.target.checked);
-                              if (e.target.checked) {
-                                  setSacrificialLambs(wheelieTeam.join(", "));
+                              const checked = e.target.checked;
+                              setIsWheelieTeam(checked);
+                              if (checked) {
+                                  setLambs(wheelieTeam.map(name => ({ name, weight: 1 })));
                               } else {
-                                  setSacrificialLambs("");
+                                  setLambs([]);
                               }
                           }}
                       />
@@ -157,7 +168,8 @@ export default function SlotMachine() {
           <TagInput
               isWheelieTeam={isWheelieTeam}
               wheelieTeam={wheelieTeam}
-              onTagsChange={setSacrificialLambs} />
+              onTagsChange={setLambs}
+          />
       </div>
   );
 }
@@ -185,9 +197,12 @@ export default function SlotMachine() {
         return (day === 2) || (day === 4)
     }
 
-    function selectPerson(){
-        return Math.floor(Math.random() * 9)
-    }
+function weightedRandomPick(array) {
+    const weightedList = array.flatMap(({ name, weight }) =>
+        Array(weight).fill(name)
+    );
+    return weightedList[Math.floor(Math.random() * weightedList.length)];
+}
 
 
 function Candle() {

@@ -2,6 +2,8 @@ import React, {useState, useEffect} from "react";
 import { motion } from "framer-motion";
 import "./App.css"
 import TagInput from "./TagInput";
+import { ref, get, update } from "firebase/database";
+import { db } from "./firebase";
 
 const rand = Math.floor(Math.random() * 100);
 const result = Math.random() < 0.5 ? "Good" : "Bad";
@@ -31,6 +33,19 @@ export default function SlotMachine() {
   const [lambs, setLambs] = useState([]);
   const [isWheelieTeam, setIsWheelieTeam] = useState(false);
   const [spinDuration, setSpinDuration] = useState(4000);
+  const [showPlusOne, setShowPlusOne] = useState(false);
+  const [finalPerson, setFinalPerson] = useState("");
+  const [pointsMap, setPointsMap] = useState({});
+
+    const handleAddPoint = (finalPerson) => {
+        setShowPlusOne(true);
+        setTimeout(() => setShowPlusOne(false), 1000);
+        wheelieTeam.forEach(person => {
+            if (person !== finalPerson) {
+
+            }
+        })
+    };
 
     useEffect(() => {
         if (spinning) {
@@ -61,21 +76,40 @@ export default function SlotMachine() {
                 setSlots(
                     Array.from({ length: 3 }, () => symbols[generateDay()])
                 );
+
                 const validLambs = lambs.filter(l => l.name.trim() !== "");
-                const finalPerson = weightedRandomPick(validLambs);
-                setPeopleSlots(
-                    Array.from({ length: 3 }, () => finalPerson || "")
-                );
+                const selected = weightedRandomPick(validLambs);
+                setFinalPerson(selected); // update state
+                setPeopleSlots(Array.from({ length: 3 }, () => selected || ""));
+                updatePointsRealtimeDB(selected).then();
+
+                // Update points
+                const updatedPoints = { ...pointsMap };
+                validLambs.forEach(lamb => {
+                    const name = lamb.name.trim();
+                    if (!name) return;
+
+                    if (name === selected) {
+                        updatedPoints[name] = 1; // reset winner to 1
+                    } else {
+                        updatedPoints[name] = (updatedPoints[name] || 1) + 1; // increment others
+                    }
+                });
+                setPointsMap(updatedPoints);
+
                 setSpinning(false);
                 clearInterval(interval1);
                 clearInterval(interval2);
                 clearInterval(textInterval);
+
+                handleAddPoint(selected); // trigger +1 animation
             }, spinDuration);
 
             return () => {
                 clearInterval(interval1);
                 clearInterval(interval2);
                 clearInterval(textInterval);
+                handleAddPoint(finalPerson);
             };
         }
     }, [spinning, lambs, spinDuration]);
@@ -155,7 +189,10 @@ export default function SlotMachine() {
                               const checked = e.target.checked;
                               setIsWheelieTeam(checked);
                               if (checked) {
-                                  setLambs(wheelieTeam.map(name => ({ name, weight: 1 })));
+                                  fetchRealtimeMembers().then( data =>
+                                      setLambs(data)
+                                  );
+
                               } else {
                                   setLambs([]);
                               }
@@ -169,6 +206,9 @@ export default function SlotMachine() {
               isWheelieTeam={isWheelieTeam}
               wheelieTeam={wheelieTeam}
               onTagsChange={setLambs}
+              showPlusOne={showPlusOne}
+              finalPerson={finalPerson}
+              entries = {lambs}
           />
       </div>
   );
@@ -218,3 +258,42 @@ function Candle() {
         </div>
     );
 }
+
+async function updatePointsRealtimeDB(selectedName) {
+    const dbRef = ref(db);
+    const snapshot = await get(dbRef);
+
+    if (!snapshot.exists()) return;
+
+    const data = snapshot.val();
+    const updates = {};
+
+    for (const [name, value] of Object.entries(data)) {
+        if (name === selectedName) {
+            updates[name] = 1;
+        } else {
+            updates[name] = (typeof value === "number" ? value : 1) + 1;
+        }
+    }
+
+    await update(dbRef, updates);
+}
+
+async function fetchRealtimeMembers() {
+    const dbRef = ref(db);
+    const snapshot = await get(dbRef);
+
+    if (!snapshot.exists()) return;
+
+    const data = snapshot.val();
+    const members = Object.entries(data).map(([name, points]) => ({
+        name,
+        weight: typeof points === "number" ? points : 1
+    }));
+
+    return members;
+}
+
+
+
+

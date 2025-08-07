@@ -1,32 +1,39 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import PlusOne from "./PlusOne";
 
-export default function TagInput({ isWheelieTeam, wheelieTeam, onTagsChange }) {
-    const [entries, setEntries] = useState([]);
-
+export default function TagInput({
+                                     isWheelieTeam,
+                                     wheelieTeam,
+                                     onTagsChange,
+                                     showPlusOne,
+                                     finalPerson,
+                                     entries,
+                                 }) {
     useEffect(() => {
-        if (isWheelieTeam) {
-            setEntries(wheelieTeam.map(name => ({ name, weight: 1 })));
-        } else {
-            setEntries([]);
+        if (showPlusOne && finalPerson) {
+            const updated = entries.map(entry => {
+                if (entry.name === finalPerson) {
+                    return { ...entry, weight: 1 }; // Reset winner
+                } else {
+                    return { ...entry, weight: entry.weight + 1 }; // Increment others
+                }
+            });
+            onTagsChange(updated);
         }
-    }, [isWheelieTeam, wheelieTeam]);
-
-    useEffect(() => {
-        onTagsChange(entries);
-    }, [entries, onTagsChange]);
+    }, [showPlusOne, finalPerson]);
 
     const addEntry = () => {
-        setEntries([...entries, { name: "", weight: 1 }]);
+        onTagsChange([...entries, { name: "", weight: 1 }]);
     };
 
     const updateEntry = (index, field, value) => {
         const newEntries = [...entries];
-        newEntries[index][field] = field === "weight" ? parseInt(value) || 1 : value;
-        setEntries(newEntries);
+        newEntries[index][field] = field === "weight" ? parseInt(value) : value;
+        onTagsChange(newEntries);
     };
 
     const removeEntry = (index) => {
-        setEntries(entries.filter((_, i) => i !== index));
+        onTagsChange(entries.filter((_, i) => i !== index));
     };
 
     return (
@@ -49,6 +56,7 @@ export default function TagInput({ isWheelieTeam, wheelieTeam, onTagsChange }) {
                         min="1"
                     />
                     <button onClick={() => removeEntry(index)} className="remove-tag">✖</button>
+                    <PlusOne show={showPlusOne && entry.name !== finalPerson} />
                 </div>
             ))}
             <button onClick={addEntry} className="add-entry">Add</button>

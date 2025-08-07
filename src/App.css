@@ -253,3 +253,11 @@ h3{
     border-radius: 6px;
     cursor: pointer;
 }
+
+.plus-one-text {
+    position: absolute;
+    color: white;
+    font-size: 24px;
+    font-weight: 900;
+    text-shadow: 0 0 6px #fff, 0 0 12px #f0f, 0 0 18px #ff0;
+}

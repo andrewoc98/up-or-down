@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
 
 .mainDiv{
     display: flex;
@@ -149,6 +148,8 @@ h3{
 .tag-input-container {
     width: 100%;
     max-width: 400px;
+    border-radius: 5px;
+
 }
 
 .tag-textarea {
@@ -167,7 +168,6 @@ h3{
 }
 
 .tag {
-    background: black;
     color: white;
     padding: 5px 8px;
     border-radius: 4px;
@@ -260,4 +260,38 @@ h3{
     font-size: 24px;
     font-weight: 900;
     text-shadow: 0 0 6px #fff, 0 0 12px #f0f, 0 0 18px #ff0;
+}
+
+
+body {
+    margin: 0;
+}
+
+/* Add animated gradient background */
+@keyframes spookyGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.mainDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+    min-height: 100vh;
+    width: 100vw;
+    justify-content: center;
+
+    /* Brighter gradient animation */
+    background: linear-gradient(-45deg, #7a380c, #000000, #100502, #613706);
+    background-size: 400% 400%;
+    animation: spookyGradient 15s ease infinite;
 }

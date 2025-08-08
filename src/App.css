@@ -13,7 +13,6 @@
 .secondDiv {
     display: flex;
     gap: 1rem; /* Equivalent to space-x-4 (16px) */
-    background-color: #1a202c; /* Equivalent to bg-gray-900 */
     padding: 1.5rem; /* Equivalent to p-6 (24px) */
     border-radius: 0.5rem; /* Equivalent to rounded-lg */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

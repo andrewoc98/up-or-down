@@ -90,7 +90,7 @@ export default function SlotMachine() {
                     if (!name) return;
 
                     if (name === selected) {
-                        updatedPoints[name] = 1; // reset winner to 1
+                        updatedPoints[name] = 0; // reset winner to 1
                     } else {
                         updatedPoints[name] = (updatedPoints[name] || 1) + 1; // increment others
                     }
@@ -270,7 +270,7 @@ async function updatePointsRealtimeDB(selectedName) {
 
     for (const [name, value] of Object.entries(data)) {
         if (name === selectedName) {
-            updates[name] = 1;
+            updates[name] = 0;
         } else {
             updates[name] = (typeof value === "number" ? value : 1) + 1;
         }
@@ -288,7 +288,7 @@ async function fetchRealtimeMembers() {
     const data = snapshot.val();
     const members = Object.entries(data).map(([name, points]) => ({
         name,
-        weight: typeof points === "number" ? points : 1
+        weight:  points
     }));
 
     return members;

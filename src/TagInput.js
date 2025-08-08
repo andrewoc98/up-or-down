@@ -13,7 +13,7 @@ export default function TagInput({
         if (showPlusOne && finalPerson) {
             const updated = entries.map(entry => {
                 if (entry.name === finalPerson) {
-                    return { ...entry, weight: 1 }; // Reset winner
+                    return { ...entry, weight: 0 }; // Reset winner
                 } else {
                     return { ...entry, weight: entry.weight + 1 }; // Increment others
                 }
@@ -53,7 +53,6 @@ export default function TagInput({
                         value={entry.weight}
                         onChange={(e) => updateEntry(index, "weight", e.target.value)}
                         className="weight-input"
-                        min="1"
                     />
                     <button onClick={() => removeEntry(index)} className="remove-tag">✖</button>
                     <PlusOne show={showPlusOne && entry.name !== finalPerson} />

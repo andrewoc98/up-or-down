@@ -12,7 +12,7 @@ const weather = ["It's miserable out", "Great stretch in the evening", "Could be
 const BoolV2 = ["True","False","Perhaps"][Math.floor(Math.random() * 3)]
 const cosmic =["Nik was Stopped", "Andrew is the Murderer", "The Big Appsecsy Determined"][Math.floor(Math.random() * 3)]
 const symbols = ["⬆️", "⬇️", "NO STAND UP"];
-const wheelieTeam = ["Andrew", "Arun", "Liam", "Nik", "Sneha", "Prashant", "John", "Vishal"];
+const wheelieTeam = ["Andrew", "Arun", "Liam", "Nik", "Sneha", "Prashant", "John"];
 const steps = [
     "Consulting Oracle.....",
     `Determining Celestial Invocation...${result}`,

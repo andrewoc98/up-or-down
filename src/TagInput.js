@@ -3,6 +3,7 @@ import PlusOne from "./PlusOne";
 
 // 🔢 Helper: find next Fibonacci number greater than n
 function nextFibonacci(n) {
+    n = Number(n)
     if (n < 0) return 1;
     let a = 0, b = 1;
     while (b <= n) {

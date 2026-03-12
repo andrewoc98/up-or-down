@@ -5,6 +5,17 @@ import TagInput from "./TagInput";
 import { ref, get, update } from "firebase/database";
 import { db } from "./firebase";
 
+// 🔢 Helper: find next Fibonacci number greater than n
+function nextFibonacci(n) {
+    n = Number(n)
+    if (n < 0) return 1;
+    let a = 0, b = 1;
+    while (b <= n) {
+        [a, b] = [b, a + b];
+    }
+    return b;
+}
+
 const rand = Math.floor(Math.random() * 100);
 const result = Math.random() < 0.5 ? "Good" : "Bad";
 const str = Math.random() < 0.5 ? "Awarding Fancash" : "Calling Revert Endpoint";
@@ -272,7 +283,8 @@ async function updatePointsRealtimeDB(selectedName) {
         if (name === selectedName) {
             updates[name] = 0;
         } else {
-            updates[name] = (typeof value === "number" ? value : 1) + 1;
+            const currentValue = typeof value === "number" ? value : 1;
+            updates[name] = nextFibonacci(currentValue);
         }
     }
 
